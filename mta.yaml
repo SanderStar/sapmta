@@ -19,6 +19,8 @@ modules:
   - name: nlstar4itweb
     type: html5
     path: web
+    requires:
+      - name: sapmta-uua-service
     build-parameters:
       build-result: dist
       builder: custom
@@ -26,8 +28,11 @@ modules:
         - npm install
         - 'npm run build:cf'
       supported-platforms: []
+  - name: db
+    type: hdb
+    path: db
     requires:
-      - name: sapmta-uua-service
+      - name: sapmta-hdi_db
 resources:
   - name: sapmta-repo-host
     type: org.cloudfoundry.managed-service
@@ -55,5 +60,15 @@ resources:
       service-plan: lite
   - name: sapmta-uua-service
     type: com.sap.xs.uaa-space
+  - name: sapmta-hdi_db
+    type: com.sap.xs.hdi-container
+    parameters:
+      config:
+        schema: hana-db
+      service: hana
+      service-name: ' hana-db'
+      service-plan: securestore
+    properties:
+      hdi-container-name: '${service-name}'
 parameters:
   deploy_mode: html5-repo
